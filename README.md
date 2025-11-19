@@ -1,4 +1,8 @@
-flow config
+## Buka gns
+buka link: http://10.15.42.89/
+project name: KJK_B_05
+
+## flow config
 1. R1 dulu
 2. firewall/mikrotik
 3. R2 + switch mhs
