@@ -1,27 +1,27 @@
 enable
 configure terminal
 
-! ===== 1. Interface ke MikroTik (Transit) =====
+! Ke MikroTik
 interface Ethernet0/0
   ip address 192.168.40.2 255.255.255.252
   no shutdown
 exit
 
-! Interface ke Switch Admin (VLAN 40)
+! Ke Switch Admin (Langsung Fisik, Tanpa VLAN Tagging)
 interface FastEthernet1/0
   ip address 10.20.40.1 255.255.255.0
   no shutdown
 exit
 
-! ===== 2. Default Route =====
-ip route 0.0.0.0 0.0.0.0 192.168.40.1 ! Gateway ke MikroTik
-
-! ===== 3. DHCP Server (Admin) =====
+! Routing & DHCP
+ip route 0.0.0.0 0.0.0.0 192.168.40.1
 ip dhcp excluded-address 10.20.40.1
+
 ip dhcp pool ADM_POOL
   network 10.20.40.0 255.255.255.0
   default-router 10.20.40.1
   dns-server 8.8.8.8
+exit
 
 end
 write memory

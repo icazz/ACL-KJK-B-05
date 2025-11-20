@@ -1,43 +1,45 @@
 enable
 configure terminal
+hostname R3
 
-! ===== 1. Interface ke MikroTik (Transit) =====
+! --- 1. Jalur ke MikroTik ---
 interface Ethernet0/0
-  ip address 192.168.20.2 255.255.255.252
-  no shutdown
+ description KE-MIKROTIK
+ ip address 192.168.20.2 255.255.255.252
+ no shutdown
 exit
 
-! Interface ke Switch (TRUNK) - Gunakan F1/0
-interface FastEthernet1/0
-  description TRUNK-KE-SWITCH-AKD
-  no shutdown
+! --- 2. Jalur ke Switch AKADEMIK (Fisik) ---
+interface Ethernet1/0
+ description JALUR-AKADEMIK-FISIK
+ ip address 10.20.20.1 255.255.255.0
+ no shutdown
 exit
 
-! Sub-Interface VLAN 20 (Akademik)
-interface FastEthernet1/0.20
-  encapsulation dot1Q 20
-  ip address 10.20.20.1 255.255.255.0
+! --- 3. Jalur ke Switch RISET (Fisik) ---
+interface Ethernet1/1
+ description JALUR-RISET-FISIK
+ ip address 10.20.30.1 255.255.255.0
+ no shutdown
 exit
 
-! Sub-Interface VLAN 30 (Riset)
-interface FastEthernet1/0.30
-  encapsulation dot1Q 30
-  ip address 10.20.30.1 255.255.255.0
-exit
+! --- 4. Routing Default ---
+ip route 0.0.0.0 0.0.0.0 192.168.20.1
 
-! ===== 2. Default Route =====
-ip route 0.0.0.0 0.0.0.0 192.168.20.1 ! Gateway ke MikroTik
-
-! ===== 3. DHCP Server (Akademik & Riset) =====
+! --- 5. DHCP Server ---
 ip dhcp excluded-address 10.20.20.1 10.20.30.1
+
 ip dhcp pool AKD_POOL
-  network 10.20.20.0 255.255.255.0
-  default-router 10.20.20.1
-  dns-server 8.8.8.8
+ network 10.20.20.0 255.255.255.0
+ default-router 10.20.20.1
+ dns-server 8.8.8.8
+exit
+
 ip dhcp pool RISET_POOL
-  network 10.20.30.0 255.255.255.0
-  default-router 10.20.30.1
-  dns-server 8.8.8.8
+ network 10.20.30.0 255.255.255.0
+ default-router 10.20.30.1
+ dns-server 8.8.8.8
+exit
 
 end
 write memory
