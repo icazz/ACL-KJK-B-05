@@ -1,27 +1,14 @@
-enable
-configure terminal
+# Ke Firewall
+auto eth0
+iface eth0 inet static
+    address 192.168.40.2
+    netmask 255.255.255.252
+    gateway 192.168.40.1
+    post-up sysctl -w net.ipv4.ip_forward=1
+    up echo nameserver 8.8.8.8 > /etc/resolv.conf
 
-! Ke MikroTik
-interface Ethernet0/0
-  ip address 192.168.40.2 255.255.255.252
-  no shutdown
-exit
-
-! Ke Switch Admin (Langsung Fisik, Tanpa VLAN Tagging)
-interface FastEthernet1/0
-  ip address 10.20.40.1 255.255.255.0
-  no shutdown
-exit
-
-! Routing & DHCP
-ip route 0.0.0.0 0.0.0.0 192.168.40.1
-ip dhcp excluded-address 10.20.40.1
-
-ip dhcp pool ADM_POOL
-  network 10.20.40.0 255.255.255.0
-  default-router 10.20.40.1
-  dns-server 8.8.8.8
-exit
-
-end
-write memory
+# Ke Switch Admin
+auto eth1
+iface eth1 inet static
+    address 10.20.40.1
+    netmask 255.255.255.0

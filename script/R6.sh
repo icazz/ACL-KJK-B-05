@@ -1,14 +1,14 @@
-# Ke Firewall (Uplink)
+# Ke Firewall
 auto eth0
 iface eth0 inet static
-    address 192.168.10.2
+    address 192.168.50.2
     netmask 255.255.255.252
-    gateway 192.168.10.1
+    gateway 192.168.50.1
     post-up sysctl -w net.ipv4.ip_forward=1
     up echo nameserver 8.8.8.8 > /etc/resolv.conf
 
-# Ke Switch Mhs (LAN)
+# Ke Switch Guest
 auto eth1
 iface eth1 inet static
-    address 10.20.10.1
+    address 10.20.50.1
     netmask 255.255.255.0

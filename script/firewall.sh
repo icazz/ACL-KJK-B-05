@@ -1,28 +1,48 @@
-# 1. Konfigurasi IP Address (4 Kaki)
-/ip address add address=192.168.1.2/24 interface=ether1 comment="WAN - To R1"
-/ip address add address=192.168.10.1/30 interface=ether2 comment="ZONE - To R2-Mhs"
-/ip address add address=192.168.20.1/30 interface=ether3 comment="ZONE - To R3-Akd"
-/ip address add address=192.168.40.1/30 interface=ether4 comment="ZONE - To R4-Adm"
+# --- IP Address ---
+auto eth0
+iface eth0 inet static
+	address 192.168.1.2
+	netmask 255.255.255.0
+	gateway 192.168.1.1
+	post-up sysctl -w net.ipv4.ip_forward=1
+	up echo nameserver 8.8.8.8 > /etc/resolv.conf
 
-# 2. Routing Default (Ke Internet)
-/ip route add gateway=192.168.1.1 comment="Default Route to Internet"
+auto eth1
+iface eth1 inet static
+	address 192.168.10.1
+	netmask 255.255.255.252
 
-# 3. Routing Statis (Ke Subnet Klien di Bawah Router)
-# Ke Mahasiswa & Guest (via R2)
-/ip route add dst-address=10.20.10.0/24 gateway=192.168.10.2
-/ip route add dst-address=10.20.50.0/24 gateway=192.168.10.2
-# Ke Akademik & Riset (via R3)
-/ip route add dst-address=10.20.20.0/24 gateway=192.168.20.2
-/ip route add dst-address=10.20.30.0/24 gateway=192.168.20.2
-# Ke Admin (via R4)
-/ip route add dst-address=10.20.40.0/24 gateway=192.168.40.2
+auto eth2
+iface eth2 inet static
+	address 192.168.20.1
+	netmask 255.255.255.252
 
-# 4. NAT (Agar semua klien bisa internetan)
-/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade comment="NAT Masquerade"
+auto eth3
+iface eth3 inet static
+	address 192.168.40.1
+	netmask 255.255.255.252
 
-# 5. Firewall Filter (Izinkan semua dulu untuk tes ping)
-/ip firewall filter add chain=forward action=accept comment="Allow All Init"
+auto eth4
+iface eth4 inet static
+	address 192.168.30.1
+	netmask 255.255.255.252
 
+auto eth5
+iface eth5 inet static
+	address 192.168.50.1
+	netmask 255.255.255.252
 
-# Memastikan Konfigurasi Sudah Masuk
-/ip address print
+# Routing ke LAN Mahasiswa via R2
+route add -net 10.20.10.0 netmask 255.255.255.0 gw 192.168.10.2
+
+# Routing ke LAN Akademik via R3
+route add -net 10.20.20.0 netmask 255.255.255.0 gw 192.168.20.2
+
+# Routing ke LAN Admin via R4
+route add -net 10.20.40.0 netmask 255.255.255.0 gw 192.168.40.2
+
+# Routing ke LAN Riset via R5
+route add -net 10.20.30.0 netmask 255.255.255.0 gw 192.168.30.2
+
+# Routing ke LAN Guest via R6
+route add -net 10.20.50.0 netmask 255.255.255.0 gw 192.168.50.2
