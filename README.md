@@ -9,7 +9,7 @@
 
 ![rangkaian](assets/topologi.jpeg)
 
-** FILOSOFI DAN KEBIJAKAN KEAMANAN
+## FILOSOFI DAN KEBIJAKAN KEAMANAN
 1. Prinsip Dasar: Zero Trust Intranet
 Filosofi yang digunakan adalah "Zero Trust Intranet", yang berarti tidak ada subnet internal yang dipercaya secara otomatis. Kebijakan ini mewajibkan penerapan Prinsip Hak Akses Minimum (Least Privilege), di mana komunikasi antar-subnet secara default diblokir dan hanya diizinkan melalui aturan eksplisit (ALLOW) pada protokol dan port yang spesifik.
 
